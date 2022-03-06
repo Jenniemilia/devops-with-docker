@@ -1,0 +1,28 @@
+FROM ubuntu:18.04
+EXPOSE 5000
+
+WORKDIR /usr/src/app
+
+#Install curl
+RUN apt-get update && apt-get install -y curl
+
+#Install node
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
+RUN apt install -y nodejs
+
+COPy . .
+
+#Install all packages
+RUN npm install 
+
+ENV REACT_APP_BACKEND_URL=http://localhost:8080
+
+#Static files
+RUN npm run build
+RUN npm install -g serve
+
+
+CMD ["serve", "-s", "-l", "5000", "build"]
+
+
+ 
